@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:img_search_app/dto/pixabay.dart';
+
+import '../dto/pixabay.dart';
+
 
 class PixabayApi {
   Future<List<PixaBayImg>> getApiData(String data) async {

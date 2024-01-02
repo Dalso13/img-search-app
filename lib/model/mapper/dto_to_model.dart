@@ -1,5 +1,7 @@
-import 'package:img_search_app/dto/pixabay.dart';
+
 import 'package:img_search_app/model/pixabay_modal.dart';
+
+import '../dto/pixabay.dart';
 
 extension DtoToModel on PixaBayImg {
   PixaBayImgModel toImageItem() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:img_search_app/model/pixabay_modal.dart';
-import 'package:img_search_app/repository/pixabay_img_repository.dart';
+import 'package:img_search_app/view_model/main_view_model.dart';
+import 'package:provider/provider.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -10,10 +11,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final repository = PixaBayImgRepository();
   final controller = TextEditingController();
-  List<PixaBayImgModel>? searchData;
-  bool isSearch = true;
 
   @override
   void dispose() {
@@ -23,6 +21,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<MainViewModel>();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -34,30 +33,23 @@ class _MainScreenState extends State<MainScreen> {
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide:
-                          BorderSide(width: 2, color: Color(0xFF4FB6B2))),
+                          const BorderSide(width: 2, color: Color(0xFF4FB6B2))),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide:
-                          BorderSide(width: 2, color: Color(0xFF4FB6B2))),
+                          const BorderSide(width: 2, color: Color(0xFF4FB6B2))),
                   hintText: 'Search',
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () async {
-                      setState(() {
-                        isSearch = false;
-                      });
-                      searchData =
-                          await repository.getImgModel(controller.text);
-                      setState(() {
-                        isSearch = true;
-                      });
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      viewModel.getImgModel(controller.text);
                     },
                   )),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            isSearch
+            viewModel.isSearch
                 ? Expanded(
                     child: GridView.count(
                         primary: false,
@@ -65,8 +57,8 @@ class _MainScreenState extends State<MainScreen> {
                         crossAxisSpacing: 30,
                         mainAxisSpacing: 30,
                         crossAxisCount: 2,
-                        children: searchData != null
-                            ? searchData!
+                        children: viewModel.searchData != null
+                            ? viewModel.searchData!
                                 .map((e) => ClipRRect(
                                     borderRadius: BorderRadius.circular(16),
                                     child: Image.network(

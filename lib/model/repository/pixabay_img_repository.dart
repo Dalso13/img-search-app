@@ -1,6 +1,7 @@
-import 'package:img_search_app/api/pixabay_api.dart';
-import 'package:img_search_app/mapper/dto_to_model.dart';
+import 'package:img_search_app/model/mapper/dto_to_model.dart';
 import 'package:img_search_app/model/pixabay_modal.dart';
+
+import '../api/pixabay_api.dart';
 
 class PixaBayImgRepository {
   final _api = PixabayApi();

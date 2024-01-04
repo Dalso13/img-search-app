@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:img_search_app/view_model/main_view_model.dart';
+import 'package:img_search_app/view_model/result/main_event.dart';
 import 'package:provider/provider.dart';
-
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,10 +13,49 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final controller = TextEditingController();
 
+
+
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      context.read<MainViewModel>().eventStream.listen((event) {
+        switch (event) {
+          case ShowSnackBar():
+            final snackBar = SnackBar(
+              content: Text(event.data),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          case ShowDialog():
+            showDialog(
+              context: context,
+              barrierDismissible: true, //바깥 영역 터치시 닫을지 여부 결정
+              builder: ((context) {
+                return AlertDialog(
+                  title: Text(event.data),
+                  actions: <Widget>[
+                    Container(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); //창 닫기
+                        },
+                        child: Text("닫기"),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+            );
+        }
+      });
+    });
   }
 
   @override
